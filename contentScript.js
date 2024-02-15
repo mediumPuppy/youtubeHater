@@ -1,19 +1,34 @@
-// Wait for the DOM to be fully loaded
-document.addEventListener('DOMContentLoaded', function() {
-    removeColumnsDivWhenAvailable();
-});
-
-console.log('Content script has been injected.');
-
-function removeColumnsDivWhenAvailable() {
-  const columnsDiv = document.getElementById('columns');
-  if (columnsDiv) {
-    columnsDiv.remove();
-    console.log('Columns div removed.');
-  } else {
-    console.log('Columns div not found, retrying...');
-    setTimeout(removeColumnsDivWhenAvailable, 1000); // Try again in 1 second
+function removeSpecificDivs() {
+    const columnsDiv = document.getElementById('columns');
+    
+    if (columnsDiv) {
+      const playerDiv = columnsDiv.querySelector('#player');
+  
+      // If the 'player' div exists within 'columns', target 'secondary' and 'below'
+      if (playerDiv) {
+        const secondaryDiv = document.getElementById('secondary');
+        const belowDiv = document.getElementById('below');
+  
+        if (secondaryDiv) {
+          secondaryDiv.remove();
+          console.log('Secondary div removed.');
+        }
+  
+        if (belowDiv) {
+          belowDiv.remove();
+          console.log('Below div removed.');
+        }
+      } else {
+        // If 'player' div does not exist, remove 'columns' div
+        columnsDiv.remove();
+        console.log('Columns div removed.');
+      }
+    } else {
+      console.log('Columns div not found, retrying...');
+      setTimeout(removeSpecificDivs, 1000); // Retry after 1 second
+    }
   }
-}
-
-removeColumnsDivWhenAvailable();
+  
+  // Initial call
+  removeSpecificDivs();
+  
